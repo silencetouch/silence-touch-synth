@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Silence Touch｜合成器水龍頭系統 — 側面剖面圖</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070808;
+  --panel:#12191C;
+  --panel-deep:#0C1214;
+  --line:#26333A;
+  --text:#ECF5F2;
+  --muted:#8FA6A8;
+  --teal:#2E9E93;
+  --teal-bright:#4FD6C9;
+  --vco:#2EBD8F;
+  --vcf:#A05FD6;
+  --eg:#5FA8E8;
+  --brain:#F5A623;
+  --cvseq:#E8703A;
+  --gateseq:#8FC6EF;
+  --lfo:#9DBF3B;
+  --push:#E88A4A;
+  --flow:0;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--bg);color:var(--text);font-family:"Noto Sans TC",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+body{padding-bottom:126px}
+::selection{background:rgba(79,214,201,.3)}
+
+header{max-width:1280px;margin:0 auto;padding:26px 24px 0;display:flex;flex-direction:column;gap:8px}
+.head-top{display:flex;align-items:baseline;gap:16px;flex-wrap:wrap}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.28em;color:var(--teal-bright);text-transform:uppercase}
+h1{font-family:"Noto Serif TC",serif;font-weight:900;font-size:clamp(1.25rem,2.4vw,1.7rem)}
+h1 em{font-style:normal;color:var(--teal-bright)}
+.lede{color:var(--muted);font-size:.83rem;line-height:1.7;max-width:70em}
+.lede b{color:var(--text);font-weight:500}
+
+/* ---- 一鍵感覺 presets ---- */
+.presets{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:2px}
+.presets .cap{font-size:.74rem;color:var(--muted);margin-right:2px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:999px;padding:7px 15px;font-size:.78rem;cursor:pointer;transition:border-color .15s,background .15s,transform .1s}
+.chip:hover{border-color:var(--teal);background:#0F2225}
+.chip:active{transform:scale(.96)}
+.chip:focus-visible{outline:2px solid var(--teal-bright);outline-offset:2px}
+
+/* ================= scene ================= */
+.scene-wrap{max-width:1280px;margin:8px auto 0;padding:0 24px}
+.scene{width:100%;display:block}
+.scene text{font-family:"Noto Sans TC",sans-serif;user-select:none;-webkit-user-select:none}
+.t-title{font-weight:700}
+.t-sub{fill:var(--muted)}
+.t-tiny{font-size:12px}
+.scene .clickable{cursor:pointer}
+.scene .clickable .card{transition:stroke .2s,filter .2s}
+.scene .clickable:hover .card{filter:brightness(1.25)}
+
+.waterline{stroke:var(--teal);stroke-width:9;fill:none;stroke-linecap:round;stroke-dasharray:14 18;opacity:0;transition:opacity .6s}
+body.running .waterline{opacity:calc(.32 + var(--flow)*.45);animation:flowup 1.1s linear infinite}
+body.running .waterline.after-vca{opacity:calc(.04 + var(--flow)*1.15)}
+.waterglow{stroke:var(--teal-bright);stroke-width:18;fill:none;stroke-linecap:round;opacity:0;filter:url(#blur6);transition:opacity .4s}
+body.running .waterglow{opacity:calc(var(--flow)*.4)}
+body.running .waterglow.before-vca{opacity:calc(.06 + var(--flow)*.18)}
+@keyframes flowup{to{stroke-dashoffset:-32}}
+@media(prefers-reduced-motion:reduce){body.running .waterline{animation:none}}
+
+#spkDots{opacity:calc(var(--flow)*1.1)}
+.ripple{fill:none;stroke:var(--teal-bright);stroke-width:2}
+#rip1{opacity:calc(var(--flow)*.85)} #rip2{opacity:calc(var(--flow)*.5)} #rip3{opacity:calc(var(--flow)*.25)}
+
+.wire{fill:none;stroke-width:2.5;opacity:.38;transition:opacity .3s}
+.wire.hot{opacity:1;stroke-dasharray:7 7;animation:wiredash 1s linear infinite}
+@keyframes wiredash{to{stroke-dashoffset:-14}}
+@media(prefers-reduced-motion:reduce){.wire.hot{animation:none}}
+
+.lfo-box{cursor:pointer}
+.lfo-box rect.card{transition:stroke .2s,filter .2s}
+.lfo-box:hover rect.card{filter:brightness(1.3)}
+.lfo-box.on rect.card{stroke:var(--lfo);stroke-width:2.5;filter:drop-shadow(0 0 9px rgba(157,191,59,.55))}
+.lfo-hint{opacity:0;transition:opacity .2s;pointer-events:none}
+.lfo-box:hover .lfo-hint{opacity:1}
+
+.scene .hl .card{stroke-width:3;filter:drop-shadow(0 0 8px rgba(79,214,201,.45))}
+
+/* ================= sequencer strip ================= */
+.seqstrip{max-width:1280px;margin:14px auto 0;padding:0 24px}
+.seq-inner{background:var(--panel);border:1px solid var(--line);border-top:2px solid var(--brain);border-radius:14px;padding:14px 18px;display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.seq-head{display:flex;flex-direction:column;gap:6px;min-width:172px;max-width:220px}
+.seq-head .tag{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.12em;color:var(--brain);border:1px solid #7A5312;border-radius:4px;padding:1px 6px;align-self:flex-start}
+.seq-head h2{font-family:"Noto Serif TC",serif;font-size:1rem;font-weight:700}
+.seq-head p{font-size:.68rem;color:var(--muted);line-height:1.6}
+.seq-head p i{display:inline-block;width:10px;height:10px;border-radius:3px;vertical-align:-1px;margin-right:4px}
+.seq-ctl{display:flex;flex-direction:column;gap:10px;min-width:150px}
+.run-btn{border:1px solid #7A5312;background:linear-gradient(180deg,#3A2C10,#241B08);color:var(--brain);border-radius:11px;padding:12px 16px;font-family:"Noto Serif TC",serif;font-weight:700;font-size:.92rem;cursor:pointer;white-space:nowrap}
+.run-btn.on{background:linear-gradient(180deg,#5C4212,#3A2A0C);box-shadow:0 0 16px rgba(245,166,35,.35)}
+.run-btn:focus-visible{outline:2px solid var(--brain);outline-offset:2px}
+.mini-btn{border:1px solid var(--line);background:var(--panel-deep);color:var(--muted);border-radius:8px;padding:6px 10px;font-size:.7rem;cursor:pointer}
+.mini-btn:hover{color:var(--text);border-color:var(--muted)}
+.bpm-box label{font-size:.7rem;color:var(--muted);display:flex;justify-content:space-between}
+.bpm-box .val{font-family:"JetBrains Mono",monospace;font-size:.68rem;color:var(--brain)}
+
+/* --- CV 旋鈕列 + Gate 列 --- */
+.seq2wrap{flex:1;min-width:460px}
+.seq2{display:grid;grid-template-columns:70px repeat(8,1fr);gap:7px 9px;align-items:center}
+.seqlab{font-family:"JetBrains Mono",monospace;font-size:.6rem;line-height:1.45;text-align:right;padding-right:4px;letter-spacing:.04em}
+.seqlab b{display:block;font-size:.68rem}
+.cvlab{color:var(--cvseq)}
+.gatelab{color:var(--gateseq)}
+.knobcell{display:flex;flex-direction:column;align-items:center;gap:3px}
+.knob{width:46px;height:46px;border-radius:50%;position:relative;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;
+  background:radial-gradient(circle at 38% 32%,#2A1B14,#160D09 70%);
+  border:2px solid #4A2A1C;box-shadow:0 2px 6px rgba(0,0,0,.5), inset 0 1px 2px rgba(255,255,255,.06);
+  transition:border-color .15s, box-shadow .15s}
+.knob:hover{border-color:var(--cvseq)}
+.knob:active{cursor:grabbing}
+.knob .ptrwrap{position:absolute;top:0;right:0;bottom:0;left:0;transform:rotate(var(--rot,0deg));pointer-events:none}
+.knob .ptrwrap::before{content:"";position:absolute;left:50%;top:5px;width:4px;height:13px;margin-left:-2px;border-radius:2px;background:var(--cvseq);box-shadow:0 0 5px rgba(232,112,58,.7)}
+.knob:focus-visible{outline:2px solid var(--cvseq);outline-offset:3px}
+.notename{font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--cvseq);font-weight:600;line-height:1}
+.knobcell.ph .knob{border-color:var(--brain);box-shadow:0 0 11px rgba(245,166,35,.55), inset 0 1px 2px rgba(255,255,255,.06)}
+.knobcell.ph .notename{color:var(--brain)}
+.gate2{height:26px;border:1px solid #1E282D;border-radius:7px;background:var(--panel-deep);cursor:pointer;position:relative;padding:0}
+.gate2::after{content:"";position:absolute;top:4px;right:4px;bottom:4px;left:4px;border-radius:4px;background:var(--line);transition:background .1s,box-shadow .1s}
+.gate2:hover{border-color:var(--gateseq)}
+.gate2.on{border-color:var(--gateseq)}
+.gate2.on::after{background:var(--gateseq);box-shadow:0 0 8px rgba(143,198,239,.6)}
+.gate2.ph.on::after{background:#FFFFFF;box-shadow:0 0 12px rgba(255,255,255,.8)}
+.gate2:focus-visible{outline:2px solid var(--gateseq);outline-offset:2px}
+.stepnum{font-family:"JetBrains Mono",monospace;font-size:.58rem;color:var(--muted);text-align:center;padding-top:1px}
+.stepnum.ph{color:var(--brain);font-weight:600}
+
+/* ================= deck ================= */
+.deck{max-width:1280px;margin:12px auto 0;padding:0 24px;display:grid;grid-template-columns:1.1fr 1fr 1.25fr 1fr 1.2fr;gap:12px}
+.module{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:12px 15px 14px;min-width:0;border-top-width:2px;scroll-margin:90px}
+#panel-vco{border-top-color:var(--vco)}
+#panel-vcf{border-top-color:var(--vcf)}
+#panel-eg{border-top-color:var(--eg)}
+#panel-lfo{border-top-color:var(--lfo)}
+#panel-out{border-top-color:var(--teal-bright)}
+@keyframes flashp{0%{box-shadow:0 0 0 3px rgba(79,214,201,.9)}100%{box-shadow:0 0 0 0 rgba(79,214,201,0)}}
+.module.flash{animation:flashp 1.1s ease-out}
+.module-head{display:flex;align-items:baseline;gap:8px;margin-bottom:9px}
+.module-head .tag{font-family:"JetBrains Mono",monospace;font-size:.6rem;letter-spacing:.12em;border:1px solid var(--line);border-radius:4px;padding:1px 6px;white-space:nowrap;color:var(--muted)}
+.module-head h2{font-family:"Noto Serif TC",serif;font-size:.92rem;font-weight:700;white-space:nowrap}
+.tag.c-vco{color:var(--vco);border-color:#1B6B52}
+.tag.c-vcf{color:var(--vcf);border-color:#5A3679}
+.tag.c-eg{color:var(--eg);border-color:#2E5B84}
+.tag.c-lfo{color:var(--lfo);border-color:#597020}
+.tag.c-out{color:var(--teal-bright);border-color:#1E5B55}
+
+.row{display:grid;grid-template-columns:4.6em 1fr 3.8em;align-items:center;gap:8px;margin:5px 0}
+.row label{font-size:.75rem;white-space:nowrap}
+.row .val{font-family:"JetBrains Mono",monospace;font-size:.66rem;color:var(--teal-bright);text-align:right;white-space:nowrap}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:24px;background:transparent;cursor:pointer;min-width:0}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--line)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:var(--teal-bright);margin-top:-5.5px;border:2px solid var(--bg);transition:transform .1s}
+input[type=range]:active::-webkit-slider-thumb{transform:scale(1.25)}
+input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:var(--line)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--teal-bright);border:2px solid var(--bg)}
+input[type=range]:focus-visible{outline:2px solid var(--teal-bright);outline-offset:3px;border-radius:6px}
+
+.wave-picker{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:7px}
+.wave-btn{background:var(--panel-deep);border:1px solid var(--line);border-radius:8px;color:var(--muted);padding:7px 2px 5px;font-size:.62rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;transition:border-color .15s,color .15s}
+.wave-btn svg{width:28px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
+.wave-btn:hover{color:var(--text)}
+.wave-btn.on{border-color:var(--vco);color:var(--vco);background:#0E2A20}
+.wave-btn:focus-visible{outline:2px solid var(--vco);outline-offset:2px}
+
+.toggle-row{display:flex;align-items:center;gap:9px;margin-top:8px;padding-top:8px;border-top:1px dashed var(--line)}
+.toggle-row .hint{font-size:.67rem;color:var(--muted);line-height:1.5;flex:1}
+.toggle-row .hint b{color:var(--eg);font-weight:500}
+.switch{position:relative;width:38px;height:22px;flex:0 0 38px;display:block}
+.switch input{position:absolute;opacity:0;width:100%;height:100%;cursor:pointer;margin:0;-webkit-appearance:none;appearance:none}
+.switch .knob{position:absolute;top:0;right:0;bottom:0;left:0;border-radius:11px;background:var(--line);transition:background .15s;pointer-events:none}
+.switch .knob::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:transform .15s,background .15s}
+.switch input:checked + .knob{background:#2E5B84}
+.switch input:checked + .knob::after{transform:translateX(16px);background:var(--eg)}
+.switch.t-teal input:checked + .knob{background:#1E5B55}
+.switch.t-teal input:checked + .knob::after{background:var(--teal-bright)}
+.switch input:focus-visible + .knob{outline:2px solid var(--eg);outline-offset:2px}
+
+canvas#envViz{width:100%;height:52px;display:block;background:var(--panel-deep);border:1px solid var(--line);border-radius:8px;margin-bottom:6px}
+.seg{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;margin-bottom:7px}
+.seg button{background:var(--panel-deep);border:1px solid var(--line);color:var(--muted);border-radius:7px;padding:6px 0;font-size:.66rem;cursor:pointer}
+.seg button:hover{color:var(--text)}
+.seg button.on{border-color:var(--lfo);color:var(--lfo);background:#1C2410}
+.seg button:focus-visible{outline:2px solid var(--lfo);outline-offset:2px}
+.seg-vcf button.on{border-color:var(--vcf);color:#D9B8F5;background:#2A1740}
+.seg-vcf button:focus-visible{outline:2px solid var(--vcf);outline-offset:2px}
+.lfo-note{font-size:.64rem;color:var(--muted);line-height:1.55;margin-top:5px}
+canvas#scope{width:100%;height:64px;display:block;background:var(--panel-deep);border:1px solid var(--line);border-radius:8px}
+
+/* ================= play bar ================= */
+.playbar{position:fixed;left:0;right:0;bottom:0;background:rgba(7,8,8,.94);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px 16px calc(10px + env(safe-area-inset-bottom));z-index:50}
+.playbar-inner{max-width:1280px;margin:0 auto;display:flex;gap:10px;align-items:stretch}
+.push-btn{flex-shrink:0;width:116px;border-radius:11px;border:1px solid #7A4E22;background:linear-gradient(180deg,#3A2A18,#241A0F);color:var(--push);font-family:"Noto Serif TC",serif;font-weight:700;font-size:.92rem;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;touch-action:none;user-select:none;-webkit-user-select:none}
+.push-btn small{font-family:"JetBrains Mono",monospace;font-size:.58rem;color:#C98A4B;letter-spacing:.14em;font-weight:400}
+body:not(.running) .push-btn{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(232,138,74,0)}50%{box-shadow:0 0 18px 2px rgba(232,138,74,.45)}}
+.push-btn.held{background:linear-gradient(180deg,#5A3A1C,#3A2712);box-shadow:0 0 22px rgba(232,138,74,.35) inset;animation:none}
+.push-btn:focus-visible{outline:2px solid var(--push);outline-offset:2px}
+.pads{flex:1;display:grid;grid-template-columns:repeat(8,1fr);gap:6px}
+.pad{border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);cursor:pointer;padding:6px 0 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;touch-action:none;user-select:none;-webkit-user-select:none;min-height:46px;transition:border-color .1s}
+.pad:hover{border-color:var(--muted)}
+.pad b{font-size:.82rem;color:var(--text);font-weight:500}
+.pad small{font-family:"JetBrains Mono",monospace;font-size:.56rem}
+.pad.held{border-color:var(--teal-bright);background:#0E2A2A;box-shadow:0 0 14px rgba(79,214,201,.3)}
+.pad:focus-visible{outline:2px solid var(--teal-bright);outline-offset:2px}
+.kbd-hint{max-width:1280px;margin:8px auto 0;padding:0 24px;color:var(--muted);font-size:.66rem;font-family:"JetBrains Mono",monospace;letter-spacing:.04em}
+
+@media(max-width:980px){
+  .deck{grid-template-columns:repeat(2,1fr)}
+  .deck .module:last-child{grid-column:1/-1}
+  .seq2wrap{min-width:0;flex-basis:100%}
+}
+@media(max-width:640px){
+  .push-btn{width:78px;font-size:.82rem}
+  .pad small{display:none}
+}
+footer{max-width:1280px;margin:28px auto 0;padding:0 24px;color:var(--muted);font-size:.7rem;line-height:1.7}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-top">
+    <div>
+      <div class="eyebrow">Silence Touch · Interactive</div>
+      <h1>合成器水龍頭系統<em>—側面剖面圖</em></h1>
+    </div>
+    <p class="lede">水從最下面的 <b>VCO 水源</b>往上流，經過<b>濾網</b>、<b>水龍頭</b>，最後到<b>喇叭</b>。圖上的每個框都可以點：綠框切換 LFO、其他框會帶你到對應的控制面板。</p>
+  </div>
+  <div class="presets" role="group" aria-label="一鍵感覺">
+    <span class="cap">先聽聽這些感覺：</span>
+    <button class="chip" data-preset="drop">💧 圓潤水滴</button>
+    <button class="chip" data-preset="fog">🌫️ 霧氣 Pad</button>
+    <button class="chip" data-preset="acid">⚡ 酸酸電子</button>
+    <button class="chip" data-preset="game">🕹️ 復古電玩</button>
+  </div>
+</header>
+
+<!-- ==================== 剖面圖場景 ==================== -->
+<div class="scene-wrap">
+<svg class="scene" viewBox="0 0 1400 780" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="合成器水龍頭系統側面剖面圖">
+  <defs>
+    <linearGradient id="pipeG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#1A2226"/><stop offset=".5" stop-color="#2E3C42"/><stop offset="1" stop-color="#161D20"/>
+    </linearGradient>
+    <filter id="blur6" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6"/></filter>
+    <marker id="ah-lfo" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--lfo)"/></marker>
+    <marker id="ah-brain" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--brain)"/></marker>
+    <marker id="ah-cv" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--cvseq)"/></marker>
+    <marker id="ah-gate" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L8 4L0 8z" fill="var(--gateseq)"/></marker>
+  </defs>
+
+  <!-- 圖例 -->
+  <g>
+    <rect x="36" y="30" width="304" height="112" rx="12" fill="#101416" stroke="var(--line)"/>
+    <line x1="58" y1="62" x2="106" y2="62" stroke="var(--teal)" stroke-width="4"/>
+    <text x="120" y="67" class="t-tiny" fill="var(--text)" font-weight="700">Patch Cable - 水管</text>
+    <line x1="58" y1="92" x2="106" y2="92" stroke="#7A6FD6" stroke-width="4"/>
+    <text x="120" y="97" class="t-tiny" fill="var(--muted)">決定誰跟誰說話</text>
+    <line x1="58" y1="122" x2="106" y2="122" stroke="var(--cvseq)" stroke-width="4"/>
+    <text x="120" y="127" class="t-tiny" fill="var(--muted)">接不同管 = 不同對話</text>
+  </g>
+
+  <!-- 水管本體 -->
+  <path d="M700 660 V150 Q700 118 732 118 H1108" fill="none" stroke="url(#pipeG)" stroke-width="46"/>
+  <rect x="672" y="560" width="56" height="14" rx="4" fill="#38474E"/>
+  <rect x="672" y="392" width="56" height="14" rx="4" fill="#38474E"/>
+  <rect x="672" y="210" width="56" height="14" rx="4" fill="#38474E"/>
+
+  <!-- 水（光暈層＋水線）-->
+  <path class="waterglow before-vca" d="M700 660 V286"/>
+  <path class="waterglow" d="M700 246 V150 Q700 118 732 118 H1104"/>
+  <path class="waterline" d="M700 660 V286"/>
+  <path class="waterline after-vca" d="M700 246 V150 Q700 118 732 118 H1104"/>
+
+  <!-- 喇叭 -->
+  <g class="clickable" id="scn-out" role="button" tabindex="0" aria-label="喇叭輸出，前往輸出面板">
+    <rect x="1108" y="86" width="26" height="66" rx="5" fill="#20282C" stroke="var(--line)" class="card"/>
+    <path d="M1134 96 L1250 34 Q1262 28 1262 44 V196 Q1262 212 1250 206 L1134 144 Z" fill="#171D20" stroke="var(--line)" stroke-width="1.5" class="card"/>
+    <path id="rip1" class="ripple" d="M1278 84 Q1294 120 1278 156"/>
+    <path id="rip2" class="ripple" d="M1300 72 Q1322 120 1300 168"/>
+    <path id="rip3" class="ripple" d="M1322 60 Q1352 120 1322 180"/>
+    <g id="spkDots" fill="var(--teal-bright)">
+      <circle cx="1290" cy="94" r="4"/><circle cx="1306" cy="132" r="3"/><circle cx="1294" cy="152" r="2.5"/>
+    </g>
+    <rect x="1090" y="14" width="222" height="52" rx="9" fill="#171D20" stroke="var(--line)" class="card"/>
+    <text x="1201" y="36" text-anchor="middle" class="t-tiny" fill="var(--text)" font-weight="700">喇叭 — 輸出</text>
+    <text x="1201" y="54" text-anchor="middle" class="t-tiny" fill="var(--muted)">你聽到的聲音</text>
+  </g>
+
+  <!-- VCA — 水龍頭 -->
+  <g class="clickable" id="scn-vca" role="button" tabindex="0" aria-label="VCA 水龍頭，前往 ADSR 面板">
+    <rect x="600" y="216" width="200" height="112" rx="14" fill="#1A2124" stroke="#3A464C" stroke-width="1.5" class="card"/>
+    <circle cx="700" cy="252" r="27" fill="#11181B" stroke="#3A464C" stroke-width="2"/>
+    <g stroke="#2C393F" stroke-width="1.5">
+      <line x1="700" y1="222" x2="700" y2="227"/><line x1="730" y1="252" x2="725" y2="252"/>
+      <line x1="700" y1="282" x2="700" y2="277"/><line x1="670" y1="252" x2="675" y2="252"/>
+    </g>
+    <circle id="valveGlow" cx="700" cy="252" r="27" fill="none" stroke="var(--teal-bright)" stroke-width="2.5" opacity="0"/>
+    <g id="valveLever">
+      <line x1="700" y1="252" x2="700" y2="231" stroke="var(--teal-bright)" stroke-width="4.5" stroke-linecap="round"/>
+    </g>
+    <text x="700" y="257" text-anchor="middle" fill="var(--teal-bright)" font-size="10">開關</text>
+    <text x="700" y="300" text-anchor="middle" class="t-title" fill="var(--text)" font-size="17">VCA — 水龍頭</text>
+    <text x="700" y="320" text-anchor="middle" class="t-sub" font-size="13">音量大小的開關</text>
+  </g>
+
+  <!-- VCF — 濾網 -->
+  <g class="clickable" id="scn-vcf" role="button" tabindex="0" aria-label="VCF 濾網，前往濾網面板">
+    <rect x="608" y="404" width="184" height="88" rx="13" fill="#3E2358" stroke="var(--vcf)" stroke-width="1.5" class="card"/>
+    <rect id="meshRect" x="616" y="412" width="168" height="30" rx="6" fill="none" stroke="var(--vcf)" stroke-width="1" stroke-dasharray="10 10" opacity=".5"/>
+    <text x="700" y="434" text-anchor="middle" class="t-title" fill="#E4CBFF" font-size="17">VCF — 濾網</text>
+    <text id="vcfModeTxt" x="700" y="472" text-anchor="middle" class="t-sub" fill="#C9A8E8" font-size="13">低通：削掉高頻的雜質</text>
+  </g>
+
+  <!-- VCO — 水源 -->
+  <g class="clickable" id="scn-vco" role="button" tabindex="0" aria-label="VCO 水源，前往水源面板">
+    <rect x="560" y="572" width="280" height="108" rx="14" fill="#0E2E24" stroke="var(--vco)" stroke-width="1.5" class="card"/>
+    <text x="700" y="614" text-anchor="middle" class="t-title" fill="#7FE6C4" font-size="19">VCO — 水源</text>
+    <text x="700" y="646" text-anchor="middle" class="t-sub" fill="#9FD9C4" font-size="14">持續振動，不會停止</text>
+    <g stroke="#7FE6C4" stroke-width="2" fill="none" stroke-linecap="round" opacity=".85">
+      <path id="wv-sine"     d="M612 664 q8 -14 16 0 t16 0 t16 0"/>
+      <path id="wv-triangle" d="M612 664 l8 -11 16 22 16 -22 8 11" visibility="hidden"/>
+      <path id="wv-sawtooth" d="M612 668 l16 -12 v12 l16 -12 v12 l16 -12 v12" visibility="hidden"/>
+      <path id="wv-square"   d="M612 668 v-11 h16 v11 h16 v-11 h16 v11" visibility="hidden"/>
+    </g>
+  </g>
+
+  <!-- EG (ADSR) -->
+  <g class="clickable" id="scn-eg" role="button" tabindex="0" aria-label="EG ADSR 你的手，前往 ADSR 面板">
+    <rect x="880" y="216" width="330" height="140" rx="14" fill="#0F2A47" stroke="#2E5B84" stroke-width="1.5" class="card"/>
+    <text x="1045" y="248" text-anchor="middle" class="t-title" fill="var(--eg)" font-size="18">EG (ADSR) - 你的手</text>
+    <text x="1045" y="276" text-anchor="middle" class="t-tiny" fill="#7FB8E8">Attack：慢速或快速打開水龍頭</text>
+    <text x="1045" y="300" text-anchor="middle" class="t-tiny" fill="#7FB8E8">Decay–Sustain：調到定位</text>
+    <text x="1045" y="324" text-anchor="middle" class="t-tiny" fill="#7FB8E8">Release：放手，自動關閉</text>
+    <path class="wire" id="egWire" d="M880 252 H736" stroke="var(--eg)" marker-end="url(#ah-gate)"/>
+  </g>
+
+  <!-- 大腦控制系統 -->
+  <g>
+    <rect x="1010" y="416" width="300" height="62" rx="11" fill="var(--brain)"/>
+    <text x="1160" y="442" text-anchor="middle" fill="#241A05" font-weight="700" font-size="16">大腦控制系統</text>
+    <text x="1160" y="464" text-anchor="middle" fill="#3D2E0C" font-size="13">Sequencer 序列器／你的鍵盤</text>
+    <path d="M1090 478 L1058 512" stroke="var(--brain)" stroke-width="2.5" marker-end="url(#ah-brain)" opacity=".6"/>
+    <path d="M1230 478 L1262 512" stroke="var(--brain)" stroke-width="2.5" marker-end="url(#ah-brain)" opacity=".6"/>
+  </g>
+
+  <!-- CV Sequencer -->
+  <g class="clickable" id="scn-cv" role="button" tabindex="0" aria-label="CV Sequencer，前往序列器">
+    <rect x="930" y="520" width="240" height="128" rx="12" fill="#3A1710" stroke="var(--cvseq)" stroke-width="1.5" class="card"/>
+    <text x="1050" y="550" text-anchor="middle" fill="var(--cvseq)" font-weight="700" font-size="15">CV Sequencer / 鍵盤音高</text>
+    <text x="1050" y="574" text-anchor="middle" class="t-tiny" fill="#E8A88A">送出 CV 音高訊號</text>
+    <text x="1050" y="596" text-anchor="middle" class="t-tiny" fill="#E8A88A">V/Oct — 決定音高</text>
+    <g>
+      <rect x="1010" y="610" width="80" height="24" rx="3" fill="#F2EDE4"/>
+      <rect x="1022" y="610" width="9" height="14" fill="#1A1A1A"/><rect x="1038" y="610" width="9" height="14" fill="#1A1A1A"/>
+      <rect x="1060" y="610" width="9" height="14" fill="#1A1A1A"/><rect x="1076" y="610" width="9" height="14" fill="#1A1A1A"/>
+    </g>
+    <path class="wire" id="cvWire" d="M930 600 C870 636 858 624 846 622" stroke="var(--cvseq)" marker-end="url(#ah-cv)"/>
+  </g>
+
+  <!-- Gate Sequencer -->
+  <g class="clickable" id="scn-gate" role="button" tabindex="0" aria-label="Gate Sequencer，前往序列器">
+    <rect x="1190" y="520" width="190" height="150" rx="12" fill="#153048" stroke="var(--gateseq)" stroke-width="1.5" class="card"/>
+    <text x="1285" y="550" text-anchor="middle" fill="var(--gateseq)" font-weight="700" font-size="15">Gate Sequencer / 鍵盤</text>
+    <text x="1285" y="578" text-anchor="middle" class="t-tiny" fill="#B8D8F2">由序列器發出的按下訊號</text>
+    <text x="1285" y="600" text-anchor="middle" class="t-tiny" fill="#B8D8F2">或是你用手按鍵盤的動作</text>
+    <text x="1285" y="622" text-anchor="middle" class="t-tiny" fill="#B8D8F2">去叫 ADSR 做動作</text>
+    <path class="wire" id="gateWire" d="M1285 520 V300 Q1285 286 1268 286 H1214" stroke="var(--gateseq)" marker-end="url(#ah-gate)"/>
+  </g>
+
+  <!-- LFO 三綠框 -->
+  <g class="lfo-box" id="lfoBox-volume" role="button" tabindex="0" aria-label="LFO 控制 VCA 水龍頭（Tremolo）">
+    <rect x="150" y="216" width="330" height="112" rx="12" fill="#1B2410" stroke="#45591B" stroke-width="1.5" class="card"/>
+    <text x="315" y="248" text-anchor="middle" fill="#D8A05E" font-weight="700" font-size="16">LFO 控制 VCA (水龍頭)</text>
+    <text x="315" y="274" text-anchor="middle" class="t-tiny" fill="#B9CC85">規律開關水龍頭</text>
+    <text x="315" y="296" text-anchor="middle" class="t-tiny" fill="#B9CC85">就可以做成 Tremolo（音量顫音）</text>
+    <path d="M180 314 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" stroke="#597020" stroke-width="1.5" fill="none"/>
+    <text x="470" y="238" text-anchor="end" class="t-tiny lfo-hint" fill="var(--lfo)">點我開／關 ↻</text>
+    <path class="wire lfo-arrow" id="lfoWire-volume" d="M480 272 H592" stroke="var(--lfo)" marker-end="url(#ah-lfo)"/>
+  </g>
+  <g class="lfo-box" id="lfoBox-cutoff" role="button" tabindex="0" aria-label="LFO 控制 VCF 濾網（Filter Sweep）">
+    <rect x="150" y="392" width="330" height="112" rx="12" fill="#1B2410" stroke="#45591B" stroke-width="1.5" class="card"/>
+    <text x="315" y="424" text-anchor="middle" fill="#D8A05E" font-weight="700" font-size="16">LFO 控制 VCF (濾網)</text>
+    <text x="315" y="450" text-anchor="middle" class="t-tiny" fill="#B9CC85">規律開關濾網</text>
+    <text x="315" y="472" text-anchor="middle" class="t-tiny" fill="#B9CC85">就可以做成娃娃音跟 Filter Sweep 等效果</text>
+    <path d="M180 490 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" stroke="#597020" stroke-width="1.5" fill="none"/>
+    <text x="470" y="414" text-anchor="end" class="t-tiny lfo-hint" fill="var(--lfo)">點我開／關 ↻</text>
+    <path class="wire lfo-arrow" id="lfoWire-cutoff" d="M480 448 H600" stroke="var(--lfo)" marker-end="url(#ah-lfo)"/>
+  </g>
+  <g class="lfo-box" id="lfoBox-pitch" role="button" tabindex="0" aria-label="LFO 控制 VCO 水源（Vibrato）">
+    <rect x="150" y="572" width="330" height="112" rx="12" fill="#1B2410" stroke="#45591B" stroke-width="1.5" class="card"/>
+    <text x="315" y="604" text-anchor="middle" fill="#D8A05E" font-weight="700" font-size="16">LFO 控制 VCO (水源)</text>
+    <text x="315" y="630" text-anchor="middle" class="t-tiny" fill="#B9CC85">規律上下擺動音高</text>
+    <text x="315" y="652" text-anchor="middle" class="t-tiny" fill="#B9CC85">就可以做成 Vibrato — 音高顫音</text>
+    <path d="M180 670 q10 -8 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" stroke="#597020" stroke-width="1.5" fill="none"/>
+    <text x="470" y="594" text-anchor="end" class="t-tiny lfo-hint" fill="var(--lfo)">點我開／關 ↻</text>
+    <path class="wire lfo-arrow" id="lfoWire-pitch" d="M480 628 H552" stroke="var(--lfo)" marker-end="url(#ah-lfo)"/>
+  </g>
+</svg>
+</div>
+
+<!-- ==================== 序列器（CV 旋鈕＋Gate）==================== -->
+<div class="seqstrip" id="panel-seq">
+  <div class="seq-inner">
+    <div class="seq-head">
+      <span class="tag">SEQ · 大腦控制系統</span>
+      <h2>序列器 — 自動的手</h2>
+      <p><i style="background:var(--cvseq)"></i><b style="color:var(--cvseq)">CV 旋鈕</b>：上下拖曳（或點一下）轉音高，Do Re Mi…<br>
+      <i style="background:var(--gateseq)"></i><b style="color:var(--gateseq)">Gate 按鈕</b>：亮起來的拍子，才會去叫 ADSR 動作。</p>
+    </div>
+    <div class="seq-ctl">
+      <button class="run-btn" id="runBtn">▶ 啟動序列器</button>
+      <div class="bpm-box">
+        <label for="bpm">速度 <span class="val" id="bpmVal">110 BPM</span></label>
+        <input type="range" id="bpm" min="50" max="200" step="1" value="110">
+      </div>
+      <button class="mini-btn" id="clearBtn">全部 Gate 關掉</button>
+      <button class="mini-btn" id="diceBtn">🎲 隨機一組</button>
+    </div>
+    <div class="seq2wrap">
+      <div class="seq2" id="seq2" role="group" aria-label="八步序列器：上排 CV 旋鈕選音高，下排 Gate 按鈕開關節奏"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 控制列 ==================== -->
+<div class="deck">
+  <section class="module" id="panel-vco" data-scene="scn-vco" aria-label="VCO 水源">
+    <div class="module-head"><span class="tag c-vco">VCO</span><h2>水源</h2></div>
+    <div class="wave-picker" role="group" aria-label="波形選擇">
+      <button class="wave-btn on" data-wave="sine"><svg viewBox="0 0 34 16"><path d="M1 8 Q5.5 0 9.5 8 T18 8 T26.5 8 T34 8"/></svg>正弦</button>
+      <button class="wave-btn" data-wave="triangle"><svg viewBox="0 0 34 16"><path d="M1 8 L6 2 L14 14 L22 2 L30 14 L34 9"/></svg>三角</button>
+      <button class="wave-btn" data-wave="sawtooth"><svg viewBox="0 0 34 16"><path d="M1 14 L11 2 L11 14 L21 2 L21 14 L31 2 L31 14"/></svg>鋸齒</button>
+      <button class="wave-btn" data-wave="square"><svg viewBox="0 0 34 16"><path d="M1 14 L1 2 L9 2 L9 14 L17 14 L17 2 L25 2 L25 14 L33 14 L33 2"/></svg>方波</button>
+    </div>
+    <div class="row">
+      <label for="pitch">基準音高</label>
+      <input type="range" id="pitch" min="-12" max="12" step="1" value="0">
+      <span class="val" id="pitchVal">C3</span>
+    </div>
+    <p class="lfo-note">波形＝水的質地：正弦最乾淨，鋸齒雜質（泛音）最多。</p>
+  </section>
+
+  <section class="module" id="panel-vcf" data-scene="scn-vcf" aria-label="VCF 濾網">
+    <div class="module-head"><span class="tag c-vcf">VCF</span><h2>濾網</h2></div>
+    <div class="seg seg-vcf" role="group" aria-label="濾網種類">
+      <button data-ftype="lowpass" class="on">低通（留低音）</button>
+      <button data-ftype="highpass">高通（留高音）</button>
+    </div>
+    <div class="row">
+      <label for="cutoff">Cutoff</label>
+      <input type="range" id="cutoff" min="0" max="1" step="0.001" value="1">
+      <span class="val" id="cutoffVal">12.0k</span>
+    </div>
+    <div class="row">
+      <label for="reso">Reso</label>
+      <input type="range" id="reso" min="0.5" max="15" step="0.1" value="0.8">
+      <span class="val" id="resoVal">0.8</span>
+    </div>
+    <p class="lfo-note">正弦波太乾淨、濾了沒感覺——換鋸齒波再轉 Cutoff，差別就出來了。</p>
+  </section>
+
+  <section class="module" id="panel-eg" data-scene="scn-eg" aria-label="EG ADSR 你的手">
+    <div class="module-head"><span class="tag c-eg">EG · ADSR</span><h2>你的手</h2></div>
+    <canvas id="envViz" width="600" height="104" aria-hidden="true"></canvas>
+    <div class="row"><label for="atk">Attack</label><input type="range" id="atk" min="0.005" max="3" step="0.005" value="0.02"><span class="val" id="atkVal">0.02s</span></div>
+    <div class="row"><label for="dec">Decay</label><input type="range" id="dec" min="0.01" max="3" step="0.01" value="0.15"><span class="val" id="decVal">0.15s</span></div>
+    <div class="row"><label for="sus">Sustain</label><input type="range" id="sus" min="0" max="1" step="0.01" value="0.75"><span class="val" id="susVal">75%</span></div>
+    <div class="row"><label for="rel">Release</label><input type="range" id="rel" min="0.02" max="5" step="0.01" value="0.4"><span class="val" id="relVal">0.40s</span></div>
+    <div class="toggle-row">
+      <p class="hint"><b>共用 ADSR</b>：同一隻手也順便打開濾網（會自動把 Cutoff 轉低，用鋸齒波最明顯）。</p>
+      <label class="switch"><input type="checkbox" id="envToFilter" aria-label="ADSR 同時控制濾網"><span class="knob"></span></label>
+    </div>
+  </section>
+
+  <section class="module" id="panel-lfo" aria-label="LFO">
+    <div class="module-head"><span class="tag c-lfo">LFO</span><h2>顫音製造機</h2></div>
+    <div class="seg" role="group" aria-label="LFO 目標">
+      <button data-target="off" class="on">關閉</button>
+      <button data-target="pitch">Vibrato</button>
+      <button data-target="cutoff">Filter Sweep</button>
+      <button data-target="volume">Tremolo</button>
+    </div>
+    <div class="row"><label for="lfoRate">速度</label><input type="range" id="lfoRate" min="0.1" max="12" step="0.1" value="5"><span class="val" id="lfoRateVal">5.0Hz</span></div>
+    <div class="row"><label for="lfoDepth">深度</label><input type="range" id="lfoDepth" min="0" max="1" step="0.01" value="0.5"><span class="val" id="lfoDepthVal">50%</span></div>
+    <p class="lfo-note">也可以直接點剖面圖左邊的綠框選目標，再點一次關閉。</p>
+  </section>
+
+  <section class="module" id="panel-out" data-scene="scn-out" aria-label="輸出與示波器">
+    <div class="module-head"><span class="tag c-out">OUT</span><h2>示波器</h2></div>
+    <canvas id="scope" width="600" height="128"></canvas>
+    <div class="row" style="margin-top:8px">
+      <label for="vol">總音量</label>
+      <input type="range" id="vol" min="0" max="1" step="0.01" value="0.7">
+      <span class="val" id="volVal">70%</span>
+    </div>
+    <div class="toggle-row">
+      <p class="hint" style="color:var(--muted)"><b style="color:var(--teal-bright)">空間感</b>：加一點回音，聲音會浮起來。</p>
+      <label class="switch t-teal"><input type="checkbox" id="spaceTgl" aria-label="空間感回音"><span class="knob"></span></label>
+    </div>
+  </section>
+</div>
+
+<p class="kbd-hint">鍵盤：A S D F G H J K＝音階　·　空白鍵＝PUSH（手動的手，按住出水）</p>
+
+<div class="playbar">
+  <div class="playbar-inner">
+    <button class="push-btn" id="push"><small>PUSH</small>按住出水</button>
+    <div class="pads" role="group" aria-label="音階鍵盤"></div>
+  </div>
+</div>
+
+<footer>Silence Touch — 把感覺直接變成聲音。單一 HTML 檔，可直接部署到任何靜態網頁空間。</footer>
+
+<script>
+(function(){
+"use strict";
+/* ================= state ================= */
+const S = {
+  wave:"sine", pitchSemi:0,
+  ftype:"lowpass", cutoff:1, reso:0.8,
+  atk:0.02, dec:0.15, sus:0.75, rel:0.4,
+  vol:0.7,
+  envToFilter:false,
+  lfoTarget:"off", lfoRate:5, lfoDepth:0.5,
+};
+const BASE_FREQ = 130.81;
+const NOTE_NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const SCALE = [
+  {n:0,l:"Do",k:"A"},{n:2,l:"Re",k:"S"},{n:4,l:"Mi",k:"D"},{n:5,l:"Fa",k:"F"},
+  {n:7,l:"Sol",k:"G"},{n:9,l:"La",k:"H"},{n:11,l:"Si",k:"J"},{n:12,l:"Do⁺",k:"K"}
+];
+const cutoffHz = v => 60 * Math.pow(12000/60, v);
+const FLT_AMT = 3600;
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const envCv = $("#envViz"), envG = envCv.getContext("2d");
+
+/* ================= audio core ================= */
+let ctx=null, osc, filter, envGain, tremGain, master, comp, analyser, lfoOsc, lfoGain;
+let delayNode, fbGain, delaySend;
+let held = new Set();
+let baseCutoff = cutoffHz(S.cutoff);
+
+function ensureAudio(){
+  if(ctx){ if(ctx.state==="suspended") ctx.resume(); return; }
+  ctx = new (window.AudioContext||window.webkitAudioContext)();
+  osc = ctx.createOscillator(); osc.type = S.wave; osc.frequency.value = BASE_FREQ;
+  filter = ctx.createBiquadFilter(); filter.type=S.ftype; filter.frequency.value = baseCutoff; filter.Q.value = S.reso;
+  envGain = ctx.createGain(); envGain.gain.value = 0;
+  tremGain = ctx.createGain(); tremGain.gain.value = 1;
+  master = ctx.createGain(); master.gain.value = S.vol;
+  comp = ctx.createDynamicsCompressor();
+  comp.threshold.value = -14; comp.ratio.value = 5; comp.knee.value = 8;
+  analyser = ctx.createAnalyser(); analyser.fftSize = 2048;
+  /* 空間感（回音）*/
+  delaySend = ctx.createGain(); delaySend.gain.value = 0;
+  delayNode = ctx.createDelay(1.2); delayNode.delayTime.value = 0.32;
+  fbGain = ctx.createGain(); fbGain.gain.value = 0.38;
+  const dampen = ctx.createBiquadFilter(); dampen.type="lowpass"; dampen.frequency.value = 3200;
+  osc.connect(filter); filter.connect(envGain); envGain.connect(tremGain);
+  tremGain.connect(master);
+  tremGain.connect(delaySend); delaySend.connect(delayNode);
+  delayNode.connect(dampen); dampen.connect(fbGain); fbGain.connect(delayNode);
+  dampen.connect(master);
+  master.connect(comp); comp.connect(analyser); analyser.connect(ctx.destination);
+  osc.start();
+  lfoOsc = ctx.createOscillator(); lfoOsc.type="sine"; lfoOsc.frequency.value = S.lfoRate;
+  lfoGain = ctx.createGain(); lfoGain.gain.value = 0;
+  lfoOsc.connect(lfoGain); lfoOsc.start();
+  routeLFO();
+  document.body.classList.add("running");
+  startAnim();
+}
+
+function noteFreq(semi){ return BASE_FREQ * Math.pow(2,(S.pitchSemi+semi)/12); }
+
+/* 平滑取消排程：從「當下的水位」接著走，不要瞬間歸零（歸零會爆音） */
+function cancelHold(param, t){
+  if(param.cancelAndHoldAtTime){ param.cancelAndHoldAtTime(t); }
+  else { param.cancelScheduledValues(t); param.setValueAtTime(param.value, t); }
+}
+
+let lastSemi = 0;
+function noteOn(semi){
+  ensureAudio();
+  lastSemi = semi;
+  const t = ctx.currentTime;
+  osc.frequency.cancelScheduledValues(t);
+  osc.frequency.setTargetAtTime(noteFreq(semi), t, 0.004);
+  const g = envGain.gain;
+  g.cancelScheduledValues(t);
+  g.setValueAtTime(Math.max(g.value,0.0001), t);
+  g.linearRampToValueAtTime(1, t+S.atk);
+  g.linearRampToValueAtTime(S.sus, t+S.atk+S.dec);
+  fltEnvManual(true, t);
+}
+function noteOff(){
+  if(!ctx) return;
+  const t = ctx.currentTime;
+  const g = envGain.gain;
+  g.cancelScheduledValues(t);
+  g.setValueAtTime(Math.max(g.value,0.0001), t);
+  g.linearRampToValueAtTime(0, t+S.rel);
+  fltEnvManual(false, t);
+}
+function fltEnvManual(on, t){
+  const d = filter.detune;
+  d.cancelScheduledValues(t);
+  if(!S.envToFilter){ d.setTargetAtTime(0, t, 0.02); return; }
+  if(on){
+    d.setValueAtTime(d.value, t);
+    d.linearRampToValueAtTime(FLT_AMT, t+S.atk);
+    d.linearRampToValueAtTime(FLT_AMT*S.sus, t+S.atk+S.dec);
+  }else{
+    d.setValueAtTime(d.value, t);
+    d.linearRampToValueAtTime(0, t+S.rel);
+  }
+}
+function trigAt(t, semi, gateDur){
+  /* 音高用極短的滑音接上去，避免尾音還在響時瞬間跳頻的雜音 */
+  osc.frequency.cancelScheduledValues(t);
+  osc.frequency.setTargetAtTime(noteFreq(semi), t, 0.003);
+  const g = envGain.gain;
+  const a = Math.min(S.atk, Math.max(gateDur*0.9, 0.005));
+  /* 從當下的水位往上打開（不歸零），Release 再長也不會被硬切出爆音 */
+  cancelHold(g, t);
+  g.linearRampToValueAtTime(1, t+a);
+  g.linearRampToValueAtTime(S.sus, t+Math.min(a+S.dec, gateDur));
+  g.setValueAtTime(Math.min(S.sus,1), t+gateDur);
+  g.linearRampToValueAtTime(0.0001, t+gateDur+S.rel);
+  if(S.envToFilter){
+    const d = filter.detune;
+    cancelHold(d, t);
+    d.linearRampToValueAtTime(FLT_AMT, t+a);
+    d.linearRampToValueAtTime(FLT_AMT*S.sus, t+Math.min(a+S.dec, gateDur));
+    d.setValueAtTime(FLT_AMT*S.sus, t+gateDur);
+    d.linearRampToValueAtTime(0, t+gateDur+S.rel);
+  }
+}
+
+/* ================= LFO ================= */
+function routeLFO(){
+  if(!ctx) return;
+  try{ lfoGain.disconnect(); }catch(e){}
+  tremGain.gain.setTargetAtTime(1, ctx.currentTime, 0.02);
+  osc.detune.setTargetAtTime(0, ctx.currentTime, 0.02);
+  const dep = S.lfoDepth;
+  if(S.lfoTarget==="pitch"){ lfoGain.gain.value = dep*160; lfoGain.connect(osc.detune); }
+  else if(S.lfoTarget==="cutoff"){ lfoGain.gain.value = dep*3600; lfoGain.connect(filter.detune); }
+  else if(S.lfoTarget==="volume"){ lfoGain.gain.value = dep*0.45; lfoGain.connect(tremGain.gain); }
+  else { lfoGain.gain.value = 0; }
+  syncLfoUI();
+}
+function syncLfoUI(){
+  ["pitch","cutoff","volume"].forEach(tg=>{
+    document.getElementById("lfoBox-"+tg).classList.toggle("on", S.lfoTarget===tg);
+    document.getElementById("lfoWire-"+tg).classList.toggle("hot", S.lfoTarget===tg);
+  });
+  $$("#panel-lfo .seg button").forEach(b=>b.classList.toggle("on", b.dataset.target===S.lfoTarget));
+}
+function setLfoTarget(tg, toggle){
+  S.lfoTarget = (toggle && S.lfoTarget===tg) ? "off" : tg;
+  /* 防呆：Cutoff 太高時 Filter Sweep 只會在聽不到的高頻擺動，自動移到中間 */
+  if(S.lfoTarget==="cutoff" && S.cutoff>0.7) setR("cutoff", 0.5);
+  ensureAudio(); routeLFO();
+}
+
+/* ================= sequencer ================= */
+const seq = {
+  running:false, bpm:110, step:0, nextTime:0, timer:null,
+  gates:[1,1,1,1,1,1,0,1],
+  degs :[0,4,7,4,5,4,2,1],
+  drawQ:[]
+};
+function stepDur(){ return 60/seq.bpm/2; }
+function seqTick(){
+  while(seq.nextTime < ctx.currentTime + 0.12){
+    seq.drawQ.push({i:seq.step, t:seq.nextTime});
+    if(seq.gates[seq.step]) trigAt(seq.nextTime, SCALE[seq.degs[seq.step]].n, stepDur()*0.55);
+    seq.nextTime += stepDur();
+    seq.step = (seq.step+1)%8;
+  }
+}
+const runBtn = $("#runBtn");
+function seqStart(){
+  ensureAudio();
+  if(seq.running) return;
+  seq.running = true; seq.step = 0;
+  seq.nextTime = ctx.currentTime + 0.08;
+  seq.timer = setInterval(seqTick, 25);
+  runBtn.textContent = "■ 停止序列器";
+  runBtn.classList.add("on");
+  ["gateWire","cvWire","egWire"].forEach(id=>document.getElementById(id).classList.add("hot"));
+}
+function seqStop(){
+  seq.running = false;
+  clearInterval(seq.timer);
+  seq.drawQ.length = 0;
+  if(ctx) noteOff();
+  runBtn.textContent = "▶ 啟動序列器";
+  runBtn.classList.remove("on");
+  ["gateWire","cvWire","egWire"].forEach(id=>document.getElementById(id).classList.remove("hot"));
+  paintPlayhead(-1);
+}
+runBtn.addEventListener("click",()=>{ seq.running ? seqStop() : seqStart(); });
+
+/* --- CV 旋鈕列 + Gate 列 --- */
+const seq2 = $("#seq2");
+const knobCells = [], knobPtrs = [], noteNames = [], gateBtns = [], stepNums = [];
+const KNOB_MIN = -135, KNOB_MAX = 135;
+const degAngle = d => KNOB_MIN + d*(KNOB_MAX-KNOB_MIN)/7;
+
+/* 轉旋鈕時給一個小小的預覽音（序列器沒在跑的時候才需要） */
+function previewNote(deg){
+  if(!ctx || seq.running) return;
+  trigAt(ctx.currentTime+0.01, SCALE[deg].n, 0.12);
+}
+function setDeg(i, d, preview){
+  d = Math.max(0, Math.min(7, d));
+  if(d===seq.degs[i]) return;
+  seq.degs[i] = d;
+  paintGrid();
+  if(preview) previewNote(d);
+}
+
+(function buildSeq2(){
+  /* 第一排：CV 旋鈕 */
+  const cvLab = document.createElement("div");
+  cvLab.className = "seqlab cvlab";
+  cvLab.innerHTML = "<b>CV</b>音高";
+  seq2.appendChild(cvLab);
+  for(let i=0;i<8;i++){
+    const cell = document.createElement("div");
+    cell.className = "knobcell";
+    const knob = document.createElement("div");
+    knob.className = "knob";
+    knob.setAttribute("role","slider");
+    knob.setAttribute("tabindex","0");
+    knob.setAttribute("aria-label","第"+(i+1)+"拍 CV 音高旋鈕");
+    knob.setAttribute("aria-valuemin","0");
+    knob.setAttribute("aria-valuemax","7");
+    const ptr = document.createElement("div");
+    ptr.className = "ptrwrap";
+    knob.appendChild(ptr);
+    const nm = document.createElement("span");
+    nm.className = "notename";
+    /* 拖曳＝轉旋鈕；原地點一下＝跳下一個音 */
+    let dragging=false, moved=false, startY=0, startDeg=0;
+    knob.addEventListener("pointerdown",e=>{
+      e.preventDefault(); ensureAudio();
+      dragging=true; moved=false; startY=e.clientY; startDeg=seq.degs[i];
+      try{knob.setPointerCapture(e.pointerId);}catch(_){}
+    });
+    knob.addEventListener("pointermove",e=>{
+      if(!dragging) return;
+      const dy = startY - e.clientY;
+      if(Math.abs(dy)>5) moved=true;
+      setDeg(i, startDeg + Math.round(dy/18), true);
+    });
+    const end = ()=>{ if(dragging && !moved) setDeg(i, (seq.degs[i]+1)%8, true); dragging=false; };
+    knob.addEventListener("pointerup", end);
+    knob.addEventListener("pointercancel", ()=>{ dragging=false; });
+    knob.addEventListener("keydown",e=>{
+      if(e.key==="ArrowUp"||e.key==="ArrowRight"){ e.preventDefault(); ensureAudio(); setDeg(i, seq.degs[i]+1, true); }
+      if(e.key==="ArrowDown"||e.key==="ArrowLeft"){ e.preventDefault(); ensureAudio(); setDeg(i, seq.degs[i]-1, true); }
+    });
+    cell.appendChild(knob); cell.appendChild(nm);
+    knobCells.push(cell); knobPtrs.push(ptr); noteNames.push(nm);
+    seq2.appendChild(cell);
+  }
+  /* 第二排：Gate 按鈕 */
+  const gtLab = document.createElement("div");
+  gtLab.className = "seqlab gatelab";
+  gtLab.innerHTML = "<b>Gate</b>節奏";
+  seq2.appendChild(gtLab);
+  for(let i=0;i<8;i++){
+    const b = document.createElement("button");
+    b.className = "gate2";
+    b.setAttribute("aria-label","第"+(i+1)+"拍 Gate 開關");
+    b.addEventListener("click",()=>{ seq.gates[i]=seq.gates[i]?0:1; paintGrid(); });
+    gateBtns.push(b);
+    seq2.appendChild(b);
+  }
+  /* 第三排：拍號 */
+  seq2.appendChild(document.createElement("div"));
+  for(let i=0;i<8;i++){
+    const sn = document.createElement("div");
+    sn.className = "stepnum"; sn.textContent = (i+1);
+    stepNums.push(sn);
+    seq2.appendChild(sn);
+  }
+  paintGrid();
+})();
+
+function paintGrid(){
+  for(let i=0;i<8;i++){
+    knobPtrs[i].style.setProperty("--rot", degAngle(seq.degs[i])+"deg");
+    noteNames[i].textContent = SCALE[seq.degs[i]].l;
+    const knob = knobCells[i].querySelector(".knob");
+    knob.setAttribute("aria-valuenow", seq.degs[i]);
+    knob.setAttribute("aria-valuetext", SCALE[seq.degs[i]].l);
+    gateBtns[i].classList.toggle("on", !!seq.gates[i]);
+  }
+}
+let phCol = -1;
+function paintPlayhead(col){
+  if(col===phCol) return;
+  if(phCol>=0){ knobCells[phCol].classList.remove("ph"); gateBtns[phCol].classList.remove("ph"); stepNums[phCol].classList.remove("ph"); }
+  phCol = col;
+  if(col>=0){ knobCells[col].classList.add("ph"); gateBtns[col].classList.add("ph"); stepNums[col].classList.add("ph"); }
+}
+$("#clearBtn").addEventListener("click",()=>{ seq.gates=[0,0,0,0,0,0,0,0]; paintGrid(); });
+$("#diceBtn").addEventListener("click",()=>{
+  for(let c=0;c<8;c++){
+    seq.gates[c] = Math.random()<0.72 ? 1 : 0;
+    seq.degs[c] = [0,2,4,4,5,7,7,1,3,6][Math.floor(Math.random()*10)]%8;
+  }
+  if(!seq.gates.some(g=>g)) seq.gates[0]=1;
+  paintGrid();
+});
+
+/* ================= UI bindings ================= */
+function setWave(w){
+  S.wave = w;
+  if(ctx) osc.type = w;
+  $$(".wave-btn").forEach(x=>x.classList.toggle("on", x.dataset.wave===w));
+  ["sine","triangle","sawtooth","square"].forEach(x=>{
+    document.getElementById("wv-"+x).setAttribute("visibility", x===w?"visible":"hidden");
+  });
+}
+$$(".wave-btn").forEach(b=>b.addEventListener("click",()=>setWave(b.dataset.wave)));
+
+function setFtype(ft){
+  S.ftype = ft;
+  if(ctx) filter.type = ft;
+  $$(".seg-vcf button").forEach(x=>x.classList.toggle("on", x.dataset.ftype===ft));
+  document.getElementById("vcfModeTxt").textContent =
+    ft==="lowpass" ? "低通：削掉高頻的雜質" : "高通：削掉低頻的轟隆聲";
+}
+$$(".seg-vcf button").forEach(b=>b.addEventListener("click",()=>{
+  ensureAudio();
+  setFtype(b.dataset.ftype);
+  /* 防呆：切換種類時，如果 Cutoff 在會完全沒聲音的位置，自動移到聽得到的地方 */
+  if(b.dataset.ftype==="highpass" && S.cutoff>0.6) setR("cutoff", 0.3);
+  if(b.dataset.ftype==="lowpass" && S.cutoff<0.25) setR("cutoff", 0.85);
+}));
+
+function bindRange(id, key, fmt, apply){
+  const el = $("#"+id), val = $("#"+id+"Val");
+  const upd = ()=>{
+    S[key] = parseFloat(el.value);
+    val.textContent = fmt(S[key]);
+    if(apply) apply(S[key]);
+  };
+  el.addEventListener("input", upd); upd();
+}
+function setR(id, v){ const el=$("#"+id); el.value=v; el.dispatchEvent(new Event("input")); }
+
+bindRange("pitch","pitchSemi",v=>{
+  const midi = 48+v;
+  return NOTE_NAMES[((midi%12)+12)%12]+Math.floor(midi/12-1);
+},()=>{
+  if(ctx && held.size>0) osc.frequency.setTargetAtTime(noteFreq(lastSemi), ctx.currentTime, 0.01);
+});
+bindRange("cutoff","cutoff",v=>{
+  const hz = cutoffHz(v);
+  return hz>=1000 ? (hz/1000).toFixed(1)+"k" : Math.round(hz)+"Hz";
+},v=>{
+  baseCutoff = cutoffHz(v);
+  if(ctx) filter.frequency.setTargetAtTime(baseCutoff, ctx.currentTime, 0.01);
+  const m = document.getElementById("meshRect");
+  m.setAttribute("stroke-dasharray",(2+v*9).toFixed(1)+" "+(2+v*9).toFixed(1));
+  m.setAttribute("opacity",(0.25+(1-v)*0.6).toFixed(2));
+});
+bindRange("reso","reso",v=>v.toFixed(1),v=>{ if(ctx) filter.Q.setTargetAtTime(v,ctx.currentTime,0.01); });
+bindRange("atk","atk",v=>v.toFixed(2)+"s",drawEnv);
+bindRange("dec","dec",v=>v.toFixed(2)+"s",drawEnv);
+bindRange("sus","sus",v=>Math.round(v*100)+"%",drawEnv);
+bindRange("rel","rel",v=>v.toFixed(2)+"s",drawEnv);
+bindRange("vol","vol",v=>Math.round(v*100)+"%",v=>{ if(ctx) master.gain.setTargetAtTime(v,ctx.currentTime,0.01); });
+bindRange("lfoRate","lfoRate",v=>v.toFixed(1)+"Hz",v=>{ if(ctx) lfoOsc.frequency.setTargetAtTime(v,ctx.currentTime,0.01); });
+bindRange("lfoDepth","lfoDepth",v=>Math.round(v*100)+"%",()=>routeLFO());
+bindRange("bpm","bpm",v=>Math.round(v)+" BPM",v=>{ seq.bpm = v; });
+
+$("#envToFilter").addEventListener("change",e=>{
+  S.envToFilter = e.target.checked;
+  /* 防呆：Cutoff 全開時打開共用 ADSR 聽不出變化，自動轉低讓掃頻有空間 */
+  if(S.envToFilter && S.cutoff>0.55) setR("cutoff", 0.35);
+  if(ctx && !S.envToFilter) filter.detune.setTargetAtTime(0, ctx.currentTime, 0.02);
+});
+$("#spaceTgl").addEventListener("change",e=>{
+  ensureAudio();
+  delaySend.gain.setTargetAtTime(e.target.checked ? 0.34 : 0, ctx.currentTime, 0.05);
+});
+
+$$("#panel-lfo .seg button").forEach(b=>{
+  b.addEventListener("click",()=>setLfoTarget(b.dataset.target,false));
+});
+["pitch","cutoff","volume"].forEach(tg=>{
+  const box = document.getElementById("lfoBox-"+tg);
+  box.addEventListener("click",()=>setLfoTarget(tg,true));
+  box.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); setLfoTarget(tg,true); } });
+});
+
+/* 場景框 → 面板 */
+const sceneMap = {"scn-vco":"panel-vco","scn-vcf":"panel-vcf","scn-vca":"panel-eg","scn-eg":"panel-eg","scn-out":"panel-out","scn-cv":"panel-seq","scn-gate":"panel-seq"};
+Object.keys(sceneMap).forEach(sid=>{
+  const el = document.getElementById(sid);
+  const go = ()=>{
+    const p = document.getElementById(sceneMap[sid]);
+    p.scrollIntoView({behavior:"smooth", block:"center"});
+    p.classList.remove("flash"); void p.offsetWidth; p.classList.add("flash");
+  };
+  el.addEventListener("click", go);
+  el.addEventListener("keydown",e=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); go(); } });
+});
+/* 面板 hover → 場景框發亮 */
+$$(".module[data-scene]").forEach(p=>{
+  const sc = document.getElementById(p.dataset.scene);
+  p.addEventListener("mouseenter",()=>sc.classList.add("hl"));
+  p.addEventListener("mouseleave",()=>sc.classList.remove("hl"));
+});
+
+/* ================= 一鍵感覺 presets ================= */
+const PRESETS = {
+  drop:{ wave:"sine", pitch:0, cutoff:.82, reso:2.5, atk:.005, dec:.3, sus:.12, rel:.5,
+         e2f:true, lfo:{target:"off"}, space:true, bpm:96,
+         gates:[1,0,1,0,1,0,1,0], degs:[0,0,4,0,7,0,4,0], run:true },
+  fog:{  wave:"triangle", pitch:0, cutoff:.55, reso:.8, atk:1.4, dec:.8, sus:.85, rel:3,
+         e2f:false, lfo:{target:"cutoff", rate:.5, depth:.3}, space:true, bpm:60,
+         gates:[1,0,0,0,1,0,0,0], degs:[0,0,0,0,2,0,0,0], run:false },
+  acid:{ wave:"sawtooth", pitch:-5, cutoff:.42, reso:9.5, atk:.01, dec:.16, sus:.25, rel:.12,
+         e2f:true, lfo:{target:"off"}, space:false, bpm:132,
+         gates:[1,1,1,1,0,1,1,1], degs:[0,0,7,0,0,4,5,1], run:true },
+  game:{ wave:"square", pitch:12, cutoff:.75, reso:1.5, atk:.005, dec:.1, sus:.55, rel:.08,
+         e2f:false, lfo:{target:"pitch", rate:6, depth:.12}, space:false, bpm:150,
+         gates:[1,1,1,1,1,1,1,1], degs:[7,4,5,7,4,2,0,2], run:true },
+};
+$$(".chip").forEach(chip=>{
+  chip.addEventListener("click",()=>{
+    ensureAudio();
+    const p = PRESETS[chip.dataset.preset];
+    setWave(p.wave);
+    setFtype(p.ftype || "lowpass");
+    setR("pitch", p.pitch); setR("cutoff", p.cutoff); setR("reso", p.reso);
+    setR("atk", p.atk); setR("dec", p.dec); setR("sus", p.sus); setR("rel", p.rel);
+    const e2f = $("#envToFilter"); if(e2f.checked!==p.e2f){ e2f.checked=p.e2f; e2f.dispatchEvent(new Event("change")); }
+    const sp = $("#spaceTgl"); if(sp.checked!==p.space){ sp.checked=p.space; sp.dispatchEvent(new Event("change")); }
+    S.lfoTarget = p.lfo.target;
+    if(p.lfo.rate!=null) setR("lfoRate", p.lfo.rate);
+    if(p.lfo.depth!=null) setR("lfoDepth", p.lfo.depth);
+    routeLFO();
+    seq.gates = p.gates.slice(); seq.degs = p.degs.slice();
+    setR("bpm", p.bpm);
+    paintGrid();
+    if(p.run) seqStart(); else seqStop();
+  });
+});
+
+/* ================= pads & push ================= */
+const padsWrap = document.querySelector(".pads");
+SCALE.forEach((s,i)=>{
+  const p = document.createElement("button");
+  p.className = "pad";
+  p.innerHTML = `<b>${s.l}</b><small>${s.k}</small>`;
+  p.setAttribute("aria-label","音階 "+s.l);
+  attachHold(p, "pad"+i, s.n);
+  padsWrap.appendChild(p);
+});
+attachHold($("#push"), "push", 0);
+
+function srcOn(id, semi){ held.add(id); noteOn(semi); }
+function srcOff(id){ held.delete(id); if(held.size===0 && !seq.running) noteOff(); }
+
+function attachHold(el, id, semi){
+  const down = e=>{
+    e.preventDefault();
+    el.classList.add("held");
+    if(el.setPointerCapture && e.pointerId!==undefined){ try{el.setPointerCapture(e.pointerId);}catch(_){} }
+    srcOn(id,semi);
+  };
+  const up = ()=>{ el.classList.remove("held"); srcOff(id); };
+  el.addEventListener("pointerdown", down);
+  el.addEventListener("pointerup", up);
+  el.addEventListener("pointercancel", up);
+  el.addEventListener("lostpointercapture", up);
+  el.addEventListener("keydown", e=>{ if((e.key===" "||e.key==="Enter") && !e.repeat){ e.preventDefault(); el.classList.add("held"); srcOn(id,semi);} });
+  el.addEventListener("keyup", e=>{ if(e.key===" "||e.key==="Enter"){ el.classList.remove("held"); srcOff(id);} });
+}
+
+const KEYMAP = {};
+SCALE.forEach((s,i)=>KEYMAP[s.k.toLowerCase().replace("⁺","")] = {id:"key"+i, semi:s.n, pad:()=>padsWrap.children[i]});
+document.addEventListener("keydown",e=>{
+  if(e.repeat || e.target.tagName==="INPUT" || e.target.tagName==="BUTTON") return;
+  if(e.code==="Space"){ e.preventDefault(); $("#push").classList.add("held"); srcOn("kbpush",0); return; }
+  const m = KEYMAP[e.key.toLowerCase()];
+  if(m){ m.pad().classList.add("held"); srcOn(m.id, m.semi); }
+});
+document.addEventListener("keyup",e=>{
+  if(e.code==="Space"){ $("#push").classList.remove("held"); srcOff("kbpush"); return; }
+  const m = KEYMAP[e.key.toLowerCase()];
+  if(m){ m.pad().classList.remove("held"); srcOff(m.id); }
+});
+window.addEventListener("blur",()=>{
+  held.clear(); if(ctx && !seq.running) noteOff();
+  $$(".held").forEach(el=>el.classList.remove("held"));
+});
+
+/* ================= ADSR 曲線圖 ================= */
+function envGeom(){
+  const w = envCv.width, h = envCv.height, pad = 6;
+  const A=S.atk, D=S.dec, R=S.rel, HOLD=Math.max((A+D+R)*0.35, 0.15);
+  const T = A+D+HOLD+R;
+  const x = t => pad + (t/T)*(w-2*pad);
+  const y = v => h-pad - v*(h-2*pad);
+  return {w,h,pad,A,D,R,HOLD,x,y};
+}
+function drawEnv(){
+  const {w,h,A,D,R,HOLD,x,y} = envGeom();
+  envG.clearRect(0,0,w,h);
+  envG.lineWidth = 2.5;
+  /* A */ envG.strokeStyle="#4FD6C9"; envG.beginPath(); envG.moveTo(x(0),y(0)); envG.lineTo(x(A),y(1)); envG.stroke();
+  /* D */ envG.strokeStyle="#5FA8E8"; envG.beginPath(); envG.moveTo(x(A),y(1)); envG.lineTo(x(A+D),y(S.sus)); envG.stroke();
+  /* S */ envG.strokeStyle="#8FA6A8"; envG.setLineDash([4,4]); envG.beginPath(); envG.moveTo(x(A+D),y(S.sus)); envG.lineTo(x(A+D+HOLD),y(S.sus)); envG.stroke(); envG.setLineDash([]);
+  /* R */ envG.strokeStyle="#E8703A"; envG.beginPath(); envG.moveTo(x(A+D+HOLD),y(S.sus)); envG.lineTo(x(A+D+HOLD+R),y(0)); envG.stroke();
+  /* 標籤 */
+  envG.fillStyle="rgba(143,166,168,.8)"; envG.font="600 15px 'JetBrains Mono',monospace";
+  envG.fillText("A", x(A/2)-4, 20);
+  envG.fillText("D", x(A+D/2)-4, 20);
+  envG.fillText("S", x(A+D+HOLD/2)-4, y(S.sus)-8);
+  envG.fillText("R", x(A+D+HOLD+R/2)-4, 20);
+}
+drawEnv();
+
+/* ================= 動畫主迴圈 ================= */
+const scopeCv = $("#scope"), g2d = scopeCv.getContext("2d");
+const valveLever = document.getElementById("valveLever");
+const valveGlow = document.getElementById("valveGlow");
+let animRunning = false;
+function startAnim(){
+  if(animRunning) return; animRunning = true;
+  const buf = new Float32Array(analyser.fftSize);
+  function frame(){
+    requestAnimationFrame(frame);
+    analyser.getFloatTimeDomainData(buf);
+    let peak = 0;
+    for(let i=0;i<buf.length;i+=8){ const a=Math.abs(buf[i]); if(a>peak) peak=a; }
+    const flow = Math.min(1, peak*1.6);
+    document.documentElement.style.setProperty("--flow", flow.toFixed(3));
+    valveLever.setAttribute("transform","rotate("+(flow*90).toFixed(1)+" 700 252)");
+    valveGlow.setAttribute("opacity",(flow*0.9).toFixed(2));
+    /* playhead */
+    if(seq.running){
+      while(seq.drawQ.length && seq.drawQ[0].t <= ctx.currentTime){
+        paintPlayhead(seq.drawQ.shift().i);
+      }
+    }
+    /* env 即時水位 */
+    if(envGain){
+      const lvl = Math.min(1, envGain.gain.value);
+      const {h,pad} = envGeom();
+      drawEnv();
+      envG.fillStyle = "rgba(79,214,201,.14)";
+      const wl = (h-2*pad)*lvl;
+      envG.fillRect(pad, h-pad-wl, envCv.width-2*pad, wl);
+    }
+    /* scope */
+    const w = scopeCv.width, h2 = scopeCv.height;
+    g2d.clearRect(0,0,w,h2);
+    g2d.strokeStyle = "rgba(143,166,168,.22)";
+    g2d.beginPath(); g2d.moveTo(0,h2/2); g2d.lineTo(w,h2/2); g2d.stroke();
+    g2d.strokeStyle = "#4FD6C9"; g2d.lineWidth = 2;
+    g2d.shadowColor = "rgba(79,214,201,.5)"; g2d.shadowBlur = 6;
+    g2d.beginPath();
+    const N = 900;
+    for(let i=0;i<N;i++){
+      const v = buf[Math.floor(i/N*buf.length)];
+      const yy = h2/2 - v*(h2/2-8);
+      i===0 ? g2d.moveTo(0,yy) : g2d.lineTo(i/N*w, yy);
+    }
+    g2d.stroke();
+    g2d.shadowBlur = 0;
+  }
+  frame();
+}
+})();
+</script>
+</body>
+</html>
